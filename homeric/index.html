@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeric Greek Vocabulary Test</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #222;
+        color: #fff;
+    }
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #333;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        position: relative; /* Added */
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .word {
+        margin-bottom: 40px;
+        font-size: 24px;
+    }
+    .reveal {
+        cursor: pointer;
+        color: #22aaff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .reveal:hover {
+        color: #66ccff;
+    }
+    .greek {
+        display: none;
+    }
+    .actions {
+        display: none;
+        margin-top: 10px;
+    }
+    button {
+        background-color: #00aaff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: #0077cc;
+    }
+    /* Added */
+    .progress-bar {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        background-color: #666;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .progress-bar-inner {
+        height: 20px;
+        background-color: #00aaff;
+        transition: width 0.3s ease;
+    }
+    .progress-text {
+        color: #aaa;
+        font-size: 14px;
+        line-height: 20px;
+        position: absolute;
+        top: 0;
+        left: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Homeric Greek Vocabulary Test</h1>
+    <div id="wordContainer"></div>
+    <!-- Added -->
+    <div class="progress-bar">
+        <div class="progress-bar-inner" id="progressBar"></div>
+        <div class="progress-text" id="progressText"></div>
+    </div>
+</div>
+
+<script>
+    let vocabulary = [];
+    let totalWords;
+    let wordsCompleted = -1;
+
+    function fetchVocabulary() {
+        fetch('vocabulary.tsv')
+            .then(response => response.text())
+            .then(text => {
+                const rows = text.split('\n').slice(1); // Skip the header row
+                vocabulary = rows.map(row => {
+                    const [greek, english] = row.split('\t'); // Split by tab
+                    return { greek, english };
+                });
+                totalWords = vocabulary.length;
+                shuffle(vocabulary); // Shuffle the vocabulary array initially
+                displayWord();
+                updateProgress();
+            })
+            .catch(error => {
+                console.error('Error fetching vocabulary:', error);
+            });
+    }
+
+    // Function to shuffle the vocabulary array
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function updateProgress() {
+        wordsCompleted++;
+        const progress = Math.floor((wordsCompleted / totalWords) * 100);
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = `${progress}%`;
+        const progressText = document.getElementById('progressText');
+        progressText.textContent = `${wordsCompleted} / ${totalWords} words completed`;
+    }
+
+    function displayWord() {
+        const wordContainer = document.getElementById('wordContainer');
+        wordContainer.innerHTML = '';
+        if (vocabulary.length === 0) {
+            wordContainer.innerHTML = '<p>Congratulations! You have finished the vocabulary list.</p>';
+            return;
+        }
+        const word = vocabulary.pop();
+        const wordElement = document.createElement('div');
+        wordElement.classList.add('word');
+        wordElement.innerHTML = `
+            <p class="english"><span class="reveal">${word.english}</span></p>
+            <p class="greek">${word.greek}</p>
+            <div class="actions">
+                <button onclick="markDone()">Mark as Done</button>
+                <button onclick="cycleWord()">Cycle Word</button>
+            </div>
+        `;
+        wordContainer.appendChild(wordElement);
+        const revealButton = wordElement.querySelector('.reveal');
+        revealButton.addEventListener('click', () => {
+            const greekWord = wordElement.querySelector('.greek');
+            greekWord.style.display = 'block';
+            const actions = wordElement.querySelector('.actions');
+            actions.style.display = 'block';
+        });
+    }
+
+    function markDone() {
+        updateProgress();
+        displayWord();
+    }
+
+    function cycleWord() {
+        shuffle(vocabulary); // Shuffle the vocabulary array
+        displayWord();
+    }
+
+    fetchVocabulary();
+</script>
+
+</body>
+</html>
