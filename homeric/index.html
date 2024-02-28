@@ -104,7 +104,9 @@
     let wordsCompleted = -1;
 
     function fetchVocabulary() {
-        fetch('vocabulary.tsv')
+        fetch('vocabulary.tsv', {
+                cache: 'no-store' // Prevent caching
+            })
             .then(response => response.text())
             .then(text => {
                 const rows = text.split('\n');//.slice(1); // Skip the header row
