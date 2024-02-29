@@ -149,7 +149,7 @@
             wordContainer.innerHTML = '<p>Congratulations! You have finished the vocabulary list.</p>';
             return;
         }
-        const word = vocabulary.pop();
+        const word = vocabulary[vocabulary.length - 1]; // vocabulary.pop();
         const wordElement = document.createElement('div');
         wordElement.classList.add('word');
         wordElement.innerHTML = `
@@ -171,6 +171,7 @@
     }
 
     function markDone() {
+        vocabulary.pop();
         updateProgress();
         displayWord();
     }
