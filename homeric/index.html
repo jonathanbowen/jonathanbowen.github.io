@@ -103,6 +103,7 @@
     let vocabulary = [];
     let totalWords;
     let wordsCompleted = -1;
+    let lastWord = null;
 
     function fetchVocabulary() {
         fetch('vocabulary.tsv', {
@@ -150,6 +151,7 @@
             return;
         }
         const word = vocabulary[vocabulary.length - 1]; // vocabulary.pop();
+        lastWord = word;
         const wordElement = document.createElement('div');
         wordElement.classList.add('word');
         wordElement.innerHTML = `
@@ -177,7 +179,12 @@
     }
 
     function cycleWord() {
-        shuffle(vocabulary); // Shuffle the vocabulary array
+        let word;
+        do {
+            shuffle(vocabulary);
+            word = vocabulary[vocabulary.length - 1];
+        }
+        while (word === lastWord && vocabulary.length > 1);
         displayWord();
     }
 
