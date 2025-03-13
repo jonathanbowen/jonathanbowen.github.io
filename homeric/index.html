@@ -5,26 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homeric Greek Vocabulary Test</title>
 <style>
+    html {
+        background: #000 url(homer2.jpg) center no-repeat;
+        background-size: contain;
+    }
     body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #222;
+        background-color: rgba(0, 0, 0, .75);
         color: #fff;
+        min-height: 100vh;
     }
     .container {
         max-width: 600px;
-        margin: 50px auto;
-        padding: 20px;
-        border-radius: 5px;
-        background-color: #333;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        margin: 0 auto;
+        padding: 70px 20px 20px;
         text-align: center;
         position: relative; /* Added */
     }
     h1 {
         text-align: center;
         margin-bottom: 20px;
+        opacity: .3;
     }
     .word {
         margin-bottom: 20px;
@@ -84,6 +87,10 @@
         position: absolute;
         top: 0;
         left: 10px;
+    }
+    .completed {
+        font-size: 18px;
+        padding: 0 0 40px;
     }
 </style>
 </head>
@@ -147,7 +154,7 @@
         const wordContainer = document.getElementById('wordContainer');
         wordContainer.innerHTML = '';
         if (vocabulary.length === 0) {
-            wordContainer.innerHTML = '<p>Congratulations! You have finished the vocabulary list.</p>';
+            wordContainer.innerHTML = '<p class="completed">Congratulations! You have finished the vocabulary list.</p>';
             return;
         }
         const word = vocabulary[vocabulary.length - 1]; // vocabulary.pop();
