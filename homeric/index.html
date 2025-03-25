@@ -28,6 +28,11 @@
         text-align: center;
         margin-bottom: 20px;
         opacity: .3;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    h1:hover {
+        opacity: .8;
     }
     .word {
         margin-bottom: 20px;
@@ -42,7 +47,7 @@
     .reveal:hover {
         color: #66ccff;
     }
-    .greek {
+    .targetlang {
         display: none;
     }
     .actions {
@@ -97,7 +102,7 @@
 <body>
 
 <div class="container">
-    <h1>Homeric Greek Vocabulary Test</h1>
+    <h1 id="langswitch">English → Greek</h1>
     <div id="wordContainer"></div>
     <!-- Added -->
     <div class="progress-bar">
@@ -111,6 +116,7 @@
     let totalWords;
     let wordsCompleted = -1;
     let lastWord = null;
+    let srcLang = 'eng';
 
     function fetchVocabulary() {
         fetch('vocabulary.tsv', {
@@ -160,10 +166,19 @@
         const word = vocabulary[vocabulary.length - 1]; // vocabulary.pop();
         lastWord = word;
         const wordElement = document.createElement('div');
+        let srcWord, targetWord;
+        if (srcLang === 'eng') {
+            srcWord = word.english;
+            targetWord = word.greek;
+        }
+        else {
+            srcWord = word.greek;
+            targetWord = word.english;
+        }
         wordElement.classList.add('word');
         wordElement.innerHTML = `
-            <p class="english"><span class="reveal">${word.english}</span></p>
-            <p class="greek">${word.greek}</p>
+            <p class="srcLang"><span class="reveal">${srcWord}</span></p>
+            <p class="targetlang">${targetWord}</p>
             <div class="actions">
                 <button onclick="markDone()">Mark as Done</button>
                 <button onclick="cycleWord()">Cycle Word</button>
@@ -172,8 +187,8 @@
         wordContainer.appendChild(wordElement);
         const revealButton = wordElement.querySelector('.reveal');
         revealButton.addEventListener('click', () => {
-            const greekWord = wordElement.querySelector('.greek');
-            greekWord.style.display = 'block';
+            const targetWord = wordElement.querySelector('.targetlang');
+            targetWord.style.display = 'block';
             const actions = wordElement.querySelector('.actions');
             actions.style.display = 'block';
         });
@@ -196,6 +211,14 @@
     }
 
     fetchVocabulary();
+
+    document.getElementById('langswitch').addEventListener('click', () => {
+        if (srcLang === 'eng') srcLang = 'grk';
+        else srcLang = 'eng';
+        document.getElementById('langswitch').innerHTML = srcLang === 'eng' ? 'English → Greek' : 'Greek → English';
+        wordsCompleted = -1;
+        fetchVocabulary();
+    });
 </script>
 
 </body>
