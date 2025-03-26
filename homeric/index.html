@@ -216,8 +216,7 @@
         if (srcLang === 'eng') srcLang = 'grk';
         else srcLang = 'eng';
         document.getElementById('langswitch').innerHTML = srcLang === 'eng' ? 'English → Greek' : 'Greek → English';
-        wordsCompleted = -1;
-        fetchVocabulary();
+        cycleWord();
     });
 </script>
 
