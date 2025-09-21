@@ -9,7 +9,7 @@
 <body>
 
 <div class="container">
-    <h1 id="langswitch">English → Greek</h1>
+    <h1 id="langswitch">Greek → English</h1>
     <div id="wordContainer"></div>
     <!-- Added -->
     <div class="progress-bar">
@@ -24,7 +24,7 @@
     let totalWords;
     let wordsCompleted = -1;
     let lastWord = null;
-    let srcLang = 'eng';
+    let srcLang = 'grk';
 
     function fetchVocabulary() {
         fetch('vocabulary.tsv', {
