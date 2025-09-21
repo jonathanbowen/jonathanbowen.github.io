@@ -3,101 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Homeric Greek Vocabulary Test</title>
-<style>
-    html {
-        background: #000 url(homer2.jpg) center no-repeat;
-        background-size: contain;
-    }
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: rgba(0, 0, 0, .75);
-        color: #fff;
-        min-height: 100vh;
-    }
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 70px 20px 20px;
-        text-align: center;
-        position: relative; /* Added */
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        opacity: .3;
-        cursor: pointer;
-        transition: all .3s ease;
-    }
-    h1:hover {
-        opacity: .8;
-    }
-    .word {
-        margin-bottom: 20px;
-        font-size: 24px;
-    }
-    .reveal {
-        cursor: pointer;
-        color: #22aaff;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    .reveal:hover {
-        color: #66ccff;
-    }
-    .targetlang {
-        display: none;
-    }
-    .actions {
-        display: none;
-        margin-top: 10px;
-    }
-    button {
-        background-color: #00aaff;
-        color: #fff;
-        border: none;
-        border-radius: 3px;
-        padding: 8px 16px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-right: 10px;
-        transition: background-color 0.3s ease;
-        margin-bottom: 20px;
-    }
-    button:hover {
-        background-color: #0077cc;
-    }
-    /* Added */
-    .progress-bar {
-        position: absolute;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        background-color: #666;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    .progress-bar-inner {
-        height: 20px;
-        background-color: #00aaff;
-        transition: width 0.3s ease;
-    }
-    .progress-text {
-        color: #aaa;
-        font-size: 14px;
-        line-height: 20px;
-        position: absolute;
-        top: 0;
-        left: 10px;
-    }
-    .completed {
-        font-size: 18px;
-        padding: 0 0 40px;
-    }
-</style>
+<title>Homeric Greek Verb Test</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -109,6 +16,8 @@
         <div class="progress-bar-inner" id="progressBar"></div>
         <div class="progress-text" id="progressText"></div>
     </div>
+
+    <a href="index.html">Switch to vocabulary &raquo;</a>
 </div>
 
 <script>
@@ -185,7 +94,7 @@
         const progressBar = document.getElementById('progressBar');
         progressBar.style.width = `${progress}%`;
         const progressText = document.getElementById('progressText');
-        progressText.textContent = `${wordsCompleted} / ${totalWords} words completed`;
+        progressText.textContent = `${wordsCompleted} / ${totalWords} verbs completed`;
     }
 
     function displayWord() {
