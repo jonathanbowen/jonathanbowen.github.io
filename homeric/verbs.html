@@ -146,15 +146,18 @@
                 if (indexesUsed.includes(index)) return;
             
                 let grammar = buildGrammar(item, index);
+                let count = 1;
 
                 arr.forEach((item2, index2) => {
                     if (item.word == item2.word && index != index2) {
                         grammar += '<br>' + buildGrammar(item2, index2);
+                        count++;
                     }
                 });
                 verbs.push({
                     word: item.word,
-                    grammar: grammar
+                    grammar: grammar,
+                    count: count
                 });
                 
             });
@@ -201,7 +204,7 @@
             targetWord = word.word;
         }
         else {
-            srcWord = word.word;
+            srcWord = word.word + (word.count > 1 ? ' (' + word.count + ')': '');
             targetWord = word.grammar;
         }
         wordElement.classList.add('word');
