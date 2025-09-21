@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeric Greek Vocabulary Test</title>
+<style>
+    html {
+        background: #000 url(homer2.jpg) center no-repeat;
+        background-size: contain;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: rgba(0, 0, 0, .75);
+        color: #fff;
+        min-height: 100vh;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 70px 20px 20px;
+        text-align: center;
+        position: relative; /* Added */
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        opacity: .3;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    h1:hover {
+        opacity: .8;
+    }
+    .word {
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+    .reveal {
+        cursor: pointer;
+        color: #22aaff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    .reveal:hover {
+        color: #66ccff;
+    }
+    .targetlang {
+        display: none;
+    }
+    .actions {
+        display: none;
+        margin-top: 10px;
+    }
+    button {
+        background-color: #00aaff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 10px;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+    }
+    button:hover {
+        background-color: #0077cc;
+    }
+    /* Added */
+    .progress-bar {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        background-color: #666;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .progress-bar-inner {
+        height: 20px;
+        background-color: #00aaff;
+        transition: width 0.3s ease;
+    }
+    .progress-text {
+        color: #aaa;
+        font-size: 14px;
+        line-height: 20px;
+        position: absolute;
+        top: 0;
+        left: 10px;
+    }
+    .completed {
+        font-size: 18px;
+        padding: 0 0 40px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="langswitch">English → Greek</h1>
+    <div id="wordContainer"></div>
+    <!-- Added -->
+    <div class="progress-bar">
+        <div class="progress-bar-inner" id="progressBar"></div>
+        <div class="progress-text" id="progressText"></div>
+    </div>
+</div>
+
+<script>
+
+    let indexesUsed = [];
+    let verbs = [];
+    let totalWords;
+    let wordsCompleted = -1;
+    let lastWord = null;
+    let srcLang = 'eng';
+    
+    function buildGrammar(item, index) {
+        
+        indexesUsed.push(index);
+        let str = item.root + ', ' + item.tense + ' ' + item.voice + ' ' + item.mood;
+        if (item.person) {
+        
+            let suffix;
+            if (item.person == 1) suffix = 'st';
+            else if (item.person == 2) suffix = 'nd';
+            else suffix = 'rd';
+            str += ' ' + item.person + suffix + ' ' + item.quantity;
+        }
+        return str.toLowerCase();
+    }
+    
+    function fetchVerbs() {
+        fetch('verbs.json', {
+            cache: 'no-store' // Prevent caching
+        })
+        .then(response => response.json())
+        .then(arr => {
+            arr.forEach((item, index) => {
+            
+                if (indexesUsed.includes(index)) return;
+            
+                let grammar = buildGrammar(item, index);
+
+                arr.forEach((item2, index2) => {
+                    if (item.word == item2.word && index != index2) {
+                        grammar += '<br>' + buildGrammar(item2, index2);
+                    }
+                });
+                verbs.push({
+                    word: item.word,
+                    grammar: grammar
+                });
+                
+            });
+            totalWords = verbs.length;
+            shuffle(verbs);
+            displayWord();
+            updateProgress();
+        })
+        .catch(error => {
+            console.error('Error fetching vocabulary:', error);
+        });
+    }
+
+    // Function to shuffle the vocabulary array
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function updateProgress() {
+        wordsCompleted++;
+        const progress = Math.floor((wordsCompleted / totalWords) * 100);
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = `${progress}%`;
+        const progressText = document.getElementById('progressText');
+        progressText.textContent = `${wordsCompleted} / ${totalWords} words completed`;
+    }
+
+    function displayWord() {
+        const wordContainer = document.getElementById('wordContainer');
+        wordContainer.innerHTML = '';
+        if (verbs.length === 0) {
+            wordContainer.innerHTML = '<p class="completed">Congratulations! You have finished the verbs.</p>';
+            return;
+        }
+        const word = verbs[verbs.length - 1]; 
+        lastWord = word;
+        const wordElement = document.createElement('div');
+        let srcWord, targetWord;
+        if (srcLang === 'eng') {
+            srcWord = word.grammar;
+            targetWord = word.word;
+        }
+        else {
+            srcWord = word.word;
+            targetWord = word.grammar;
+        }
+        wordElement.classList.add('word');
+        wordElement.innerHTML = `
+            <p class="srcLang"><span class="reveal">${srcWord}</span></p>
+            <p class="targetlang">${targetWord}</p>
+            <div class="actions">
+                <button onclick="markDone()">Mark as Done</button>
+                <button onclick="cycleWord()">Cycle Word</button>
+            </div>
+        `;
+        wordContainer.appendChild(wordElement);
+        const revealButton = wordElement.querySelector('.reveal');
+        revealButton.addEventListener('click', () => {
+            const targetWord = wordElement.querySelector('.targetlang');
+            targetWord.style.display = 'block';
+            const actions = wordElement.querySelector('.actions');
+            actions.style.display = 'block';
+        });
+    }
+
+    function markDone() {
+        verbs.pop();
+        updateProgress();
+        displayWord();
+    }
+
+    function cycleWord() {
+        let word;
+        do {
+            shuffle(verbs);
+            word = verbs[verbs.length - 1];
+        }
+        while (word === lastWord && verbs.length > 1);
+        displayWord();
+    }
+
+    fetchVerbs();
+
+    document.getElementById('langswitch').addEventListener('click', () => {
+        if (srcLang === 'eng') srcLang = 'grk';
+        else srcLang = 'eng';
+        document.getElementById('langswitch').innerHTML = srcLang === 'eng' ? 'English → Greek' : 'Greek → English';
+        cycleWord();
+    });
+</script>
+
+</body>
+</html>
