@@ -32,8 +32,6 @@
         font-size: 24px;
     }
     a {
-        position: relative;
-        top: 3em;
     }
     .reveal, a {
         cursor: pointer;
@@ -69,7 +67,7 @@
     /* Added */
     .progress-bar {
         position: absolute;
-        bottom: 10px;
+        bottom: 40px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -93,4 +91,13 @@
     .completed {
         font-size: 18px;
         padding: 0 0 40px;
+    }
+    .additional-translation {
+        display: block;
+        margin-top: .5em; 
+    }
+    .switch-container {
+        padding-bottom: 30px;
+        position: relative;
+        top: 3em;
     }
