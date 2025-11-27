@@ -27,7 +27,7 @@
     h1:hover {
         opacity: .8;
     }
-    .word {
+    .word, .spinner {
         margin-bottom: 20px;
         font-size: 24px;
     }
@@ -100,4 +100,12 @@
         padding-bottom: 30px;
         position: relative;
         top: 3em;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .spinner {
+        display: inline-block;
+        animation: spin 1s linear infinite;
     }
