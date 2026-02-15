@@ -44,6 +44,9 @@
                     const [greek, english] = row.split('\t'); // Split by tab
                     return { greek, english };
                 });
+                vocabulary = vocabulary.filter(item => 
+                    item.greek.toLowerCase() == item.greek
+                );
                 totalWords = vocabulary.length;
                 shuffle(vocabulary); // Shuffle the vocabulary array initially
                 displayWord();
