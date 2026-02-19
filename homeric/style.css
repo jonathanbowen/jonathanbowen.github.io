@@ -1,5 +1,5 @@
     html {
-        background: #000 url(homer2.jpg) center no-repeat;
+        background: #000 url(homer2.jpg) center no-repeat fixed;
         background-size: contain;
     }
     body {
