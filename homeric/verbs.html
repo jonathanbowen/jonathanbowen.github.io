@@ -69,11 +69,13 @@
                         count++;
                     }
                 });
-                verbs.push({
-                    word: item.word,
-                    grammar: grammar,
-                    count: count
-                });
+                if (item.word != item.root) {
+                    verbs.push({
+                        word: item.word,
+                        grammar: grammar,
+                        count: count
+                    });
+                }
                 
             });
             totalWords = verbs.length;
