@@ -42,12 +42,16 @@
     .reveal:hover, a:hover {
         color: #66ccff;
     }
-    .targetlang {
+    .targetlang, .quoteContainer {
         display: none;
     }
     .actions {
         display: none;
         margin-top: 10px;
+    }
+    .quoteContainer {
+        font-size: .75em;
+        text-align: center;
     }
     button {
         background-color: #00aaff;

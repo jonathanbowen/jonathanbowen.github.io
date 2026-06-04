@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Homeric Greek Vocabulary Test</title>
-<link rel="stylesheet" href="style.css?v4">
+<link rel="stylesheet" href="style.css?v5">
 
 <link rel="icon" href="homer-transparent-512x512.webp" sizes="32x32" />
 <link rel="icon" href="homer-transparent-512x512.webp" sizes="192x192" />
@@ -41,8 +41,8 @@
             .then(text => {
                 const rows = text.split('\n');//.slice(1); // Skip the header row
                 vocabulary = rows.map(row => {
-                    const [greek, english] = row.split('\t'); // Split by tab
-                    return { greek, english };
+                    const [greek, english, quote, lineNum] = row.replace(/\r/, '').split('\t'); // Split by tab
+                    return { greek, english, quote, lineNum };
                 });
                 vocabulary = vocabulary.filter(item => 
                     item.greek.toLowerCase() == item.greek
@@ -94,6 +94,15 @@
             targetWord = word.english;
         }
         wordElement.classList.add('word');
+        let quoteElement = '';
+        if (word.quote && word.lineNum) {
+            quoteElement = `
+                <div class="quoteContainer">
+                    <p class="quote">${word.quote}</p>
+                    <p class="lineNum">${word.lineNum}</p>
+                </div>
+            `
+        }
         wordElement.innerHTML = `
             <p class="srcLang"><span class="reveal">${srcWord}</span></p>
             <p class="targetlang">${targetWord}</p>
@@ -101,6 +110,7 @@
                 <button onclick="markDone()">Mark as Done</button>
                 <button onclick="cycleWord()">Cycle Word</button>
             </div>
+            ${quoteElement}
         `;
         wordContainer.appendChild(wordElement);
         const revealButton = wordElement.querySelector('.reveal');
@@ -109,6 +119,8 @@
             targetWord.style.display = 'block';
             const actions = wordElement.querySelector('.actions');
             actions.style.display = 'block';
+            const quote = wordElement.querySelector('.quoteContainer');
+            quote && (quote.style.display = 'block');
         });
     }
 
